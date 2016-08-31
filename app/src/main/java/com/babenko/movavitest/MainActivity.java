@@ -3,6 +3,8 @@ package com.babenko.movavitest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -14,9 +16,10 @@ import com.babenko.movavitest.Data.Codes;
 import com.babenko.movavitest.Fragments.ImageEditorFragment;
 import com.babenko.movavitest.Fragments.SelectPictureFragment;
 import com.babenko.movavitest.Helpers.UtilsHelper;
+import com.babenko.movavitest.Interfaces.EditPictureInterface;
 import com.babenko.movavitest.Interfaces.SelectPictureInterface;
 
-public class MainActivity extends AppCompatActivity implements SelectPictureInterface {
+public class MainActivity extends AppCompatActivity implements SelectPictureInterface, EditPictureInterface {
     String TAG = "MainActivity";
     SelectPictureFragment mSelectFragment;
     ImageEditorFragment mImageEditorFragment;
@@ -94,6 +97,38 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
                 .addToBackStack("Selector")
                 .replace(R.id.mainLayout, mSelectFragment)
                 .commit();
+    }
+
+    public void onImageEditorFragmentCreated(ImageEditorFragment imageEditorFragment) {
+        this.mImageEditorFragment = imageEditorFragment;
+        setImageEditorInterface();
+    }
+
+    private void setImageEditorInterface() {
+        mImageEditorFragment.setmInterface(this);
+    }
+
+    private Bitmap loadResizedImage(String mImagePath) {
+        int maxSize = getResources().getInteger(R.integer.max_size);
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(mImagePath, bounds);
+        int width = bounds.outWidth;
+        int height = bounds.outHeight;
+        boolean withinBounds = width <=maxSize  && height <= maxSize;
+        if (!withinBounds) {
+            float sampleSizeF;
+            if (width >= height) {
+                sampleSizeF = (float) width / (float) maxSize;
+            } else {
+                sampleSizeF = (float) height / (float) maxSize;
+            }
+            int sampleSize = Math.round(sampleSizeF);
+            Log.d(TAG, "loading " + width + " " + height + " " + sampleSizeF + " " + sampleSize);
+            BitmapFactory.Options resample = new BitmapFactory.Options();
+            resample.inSampleSize = sampleSize;
+            return BitmapFactory.decodeFile(mImagePath, resample);
+        } else return BitmapFactory.decodeFile(mImagePath, null);
     }
 
 }
