@@ -8,14 +8,18 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.babenko.movavitest.Data.Codes;
+import com.babenko.movavitest.Fragments.ImageEditorFragment;
 import com.babenko.movavitest.Fragments.SelectPictureFragment;
 import com.babenko.movavitest.Helpers.UtilsHelper;
 import com.babenko.movavitest.Interfaces.SelectPictureInterface;
 
 public class MainActivity extends AppCompatActivity implements SelectPictureInterface {
-    SelectPictureFragment selectFragment;
+    String TAG = "MainActivity";
+    SelectPictureFragment mSelectFragment;
+    ImageEditorFragment mImageEditorFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,27 +63,36 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
                 int columnIndex = cursor.getColumnIndex(fileColumn[0]);
                 String photoPath = cursor.getString(columnIndex);
                 cursor.close();
-                //startEditing
+                Log.d(TAG, photoPath);
             }
         }
     }
 
     public void onSelectPictureFragmentCreated(SelectPictureFragment selectFragment) {
-        this.selectFragment = selectFragment;
+        this.mSelectFragment = selectFragment;
         setSelectPictureInterface();
     }
 
     private void setSelectPictureInterface() {
-        selectFragment.setmInterface(this);
+        mSelectFragment.setmInterface(this);
     }
 
     private void showSelectPictureFragment() {
-        selectFragment = new SelectPictureFragment();
-        selectFragment.setmInterface(this);
-
+        mSelectFragment = new SelectPictureFragment();
+        mSelectFragment.setmInterface(this);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.mainLayout, selectFragment)
+                .replace(R.id.mainLayout, mSelectFragment)
+                .commit();
+    }
+
+    private void showImageEditorFragment() {
+        mImageEditorFragment = new ImageEditorFragment();
+        mImageEditorFragment.setmInterface(this);
+
+        getFragmentManager().beginTransaction()
+                .addToBackStack("Selector")
+                .replace(R.id.mainLayout, mSelectFragment)
                 .commit();
     }
 

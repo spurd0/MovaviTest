@@ -2,4 +2,7 @@
     <string name="app_name">MovaviTest</string>
     <string name="start_text">Select Photo</string>
     <string name="no_permission_read_storage">No permission to read your External storage, please enable it in app settings</string>
+    <string name="button_before">До</string>
+    <string name="button_effects">До &amp; После</string>
+    <string name="button_after">После</string>
 </resources>
