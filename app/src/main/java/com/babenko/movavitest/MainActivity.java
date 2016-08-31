@@ -1,7 +1,5 @@
 package com.babenko.movavitest;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -10,36 +8,25 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
 import com.babenko.movavitest.Data.Codes;
+import com.babenko.movavitest.Fragments.SelectPictureFragment;
 import com.babenko.movavitest.Helpers.UtilsHelper;
+import com.babenko.movavitest.Interfaces.SelectPictureInterface;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SelectPictureInterface {
+    SelectPictureFragment selectFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initButton();
+        if (savedInstanceState == null) { // TODO: 8/31/2016  remade when start fragment
+            showSelectPictureFragment();
+        }
     }
 
-    private void initButton() {
-        Button startButton = (Button) findViewById(R.id.startButton);
-        final Activity activity = this;
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
-                if (UtilsHelper.checkPermission(activity, permission)) {
-                    openGalery();
-                } else {
-                    UtilsHelper.requestPermission(activity, permission, Codes.READ_EXTERNAL_STORAGE_CODE);
-                }
-            }
-        });
-    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -55,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void openGalery() {
+    @Override
+    public void openGalery() {
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, Codes.PHOTO_GALLERY);
     }
@@ -75,4 +63,24 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void onSelectPictureFragmentCreated(SelectPictureFragment selectFragment) {
+        this.selectFragment = selectFragment;
+        setSelectPictureInterface();
+    }
+
+    private void setSelectPictureInterface() {
+        selectFragment.setmInterface(this);
+    }
+
+    private void showSelectPictureFragment() {
+        selectFragment = new SelectPictureFragment();
+        selectFragment.setmInterface(this);
+
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.mainLayout, selectFragment)
+                .commit();
+    }
+
 }
