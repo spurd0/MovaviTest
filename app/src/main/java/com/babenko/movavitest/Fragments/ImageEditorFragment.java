@@ -1,10 +1,12 @@
 package com.babenko.movavitest.Fragments;
 
+import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.babenko.movavitest.Interfaces.EditPictureInterface;
 import com.babenko.movavitest.MainActivity;
@@ -15,6 +17,7 @@ import com.babenko.movavitest.R;
  */
 public class ImageEditorFragment extends Fragment {
     EditPictureInterface mInterface;
+    ImageView mImage;
 
 
     @Override
@@ -31,10 +34,14 @@ public class ImageEditorFragment extends Fragment {
     }
 
     private void initViews() {
-
+        mImage = (ImageView) getView().findViewById(R.id.imageViewEditor);
     }
 
     public void setmInterface(EditPictureInterface mInterface) {
         this.mInterface = mInterface;
+    }
+
+    public void setImage(Bitmap mBitmap) {
+        mImage.setImageBitmap(mBitmap);
     }
 }

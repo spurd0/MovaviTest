@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
     String TAG = "MainActivity";
     SelectPictureFragment mSelectFragment;
     ImageEditorFragment mImageEditorFragment;
+    String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +65,10 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
                 Cursor cursor = getContentResolver().query(uri, fileColumn, null, null, null);
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(fileColumn[0]);
-                String photoPath = cursor.getString(columnIndex);
+                imagePath = cursor.getString(columnIndex);
                 cursor.close();
-                Log.d(TAG, photoPath);
+                Log.d(TAG, imagePath);
+                showImageEditorFragment();
             }
         }
     }
@@ -95,13 +97,14 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
 
         getFragmentManager().beginTransaction()
                 .addToBackStack("Selector")
-                .replace(R.id.mainLayout, mSelectFragment)
+                .replace(R.id.mainLayout, mImageEditorFragment)
                 .commit();
     }
 
     public void onImageEditorFragmentCreated(ImageEditorFragment imageEditorFragment) {
         this.mImageEditorFragment = imageEditorFragment;
         setImageEditorInterface();
+        mImageEditorFragment.setImage(loadResizedImage(imagePath));
     }
 
     private void setImageEditorInterface() {
