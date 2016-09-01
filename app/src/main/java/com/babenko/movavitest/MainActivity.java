@@ -5,6 +5,10 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -24,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
     SelectPictureFragment mSelectFragment;
     ImageEditorFragment mImageEditorFragment;
     String imagePath;
+    Bitmap alteredBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,4 +139,32 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
         } else return BitmapFactory.decodeFile(mImagePath, null);
     }
 
+    @Override
+    public void beforeButtonPressed() {
+        mImageEditorFragment.setImage(loadResizedImage(imagePath));
+    }
+
+    @Override
+    public void effectButtonPressed() {
+        mImageEditorFragment.setImage(loadEffectImage(imagePath));
+    }
+
+    @Override
+    public void afterButtonPressed() {
+
+    }
+
+    private Bitmap loadEffectImage(String mImagePath) {
+        Bitmap image = loadResizedImage(mImagePath);
+        alteredBitmap = Bitmap.createBitmap(image.getWidth(), image
+                .getHeight(), image.getConfig());
+        Canvas editCanvas = new Canvas(alteredBitmap);
+        Paint paint = new Paint();
+        paint.setColor(Color.GREEN);
+        paint.setStrokeWidth(5);
+        Matrix matrix = new Matrix();
+        editCanvas.drawBitmap(image, matrix, paint);
+        editCanvas.drawLine(alteredBitmap.getWidth()/2, alteredBitmap.getHeight(), alteredBitmap.getWidth()/2, 0, paint);
+        return alteredBitmap;
+    }
 }
