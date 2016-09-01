@@ -22,6 +22,9 @@ public class ImageEditor {
 
     Canvas editCanvas;
 
+    Paint effectPaint;
+    Paint linePaint;
+
     Activity mActivity;
     String mImagePath;
 
@@ -42,6 +45,10 @@ public class ImageEditor {
         originalImagePartBm = Bitmap.createBitmap(origImageBitmap, 0, 0, imageWidth/2, imageHeight);
         editedImagePartBm = Bitmap.createBitmap(origImageBitmap, imageWidth/2, 0, imageWidth/2, imageHeight);
         editCanvas = new Canvas(editedBitmap);
+        effectPaint = new Paint();
+        linePaint = new Paint();
+        linePaint.setColor(Color.WHITE);
+        linePaint.setStrokeWidth(10);
     }
 
 
@@ -68,28 +75,19 @@ public class ImageEditor {
     }
 
     public Bitmap getEditPreviewImage() {
-        Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(10);
-
-        editCanvas.drawBitmap(originalImagePartBm, 0, 0, paint);
-        editCanvas.drawLine(editedBitmap.getWidth()/2, editedBitmap.getHeight(), editedBitmap.getWidth()/2, 0, paint);
+        editCanvas.drawBitmap(originalImagePartBm, 0, 0, linePaint);
+        editCanvas.drawLine(editedBitmap.getWidth()/2, editedBitmap.getHeight(), editedBitmap.getWidth()/2, 0, linePaint);
 
         ColorMatrix cm = new ColorMatrix();
         cm.setSaturation(0);
         ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
-        paint.setColorFilter(f);
-        editCanvas.drawBitmap(editedImagePartBm, imageWidth/2, 0, paint);
+        effectPaint.setColorFilter(f);
+        editCanvas.drawBitmap(editedImagePartBm, imageWidth/2, 0, effectPaint);
         return editedBitmap;
     }
 
     public Bitmap getEditedImage() {
-        Paint paint = new Paint();
-        ColorMatrix cm = new ColorMatrix();
-        cm.setSaturation(0);
-        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
-        paint.setColorFilter(f);
-        editCanvas.drawBitmap(origImageBitmap, 0, 0, paint);
+        editCanvas.drawBitmap(origImageBitmap, 0, 0, effectPaint);
         return editedBitmap;
     }
 
