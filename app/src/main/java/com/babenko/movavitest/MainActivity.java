@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
                 imagePath = cursor.getString(columnIndex);
                 cursor.close();
                 Log.d(TAG, imagePath);
-                mImageEditor = new ImageEditor(this, imagePath);
+                mImageEditor = new ImageEditor(this, imagePath, this);
                 showImageEditorFragment();
             }
         }
@@ -129,7 +129,11 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
         mImageEditorFragment.setImage(mImageEditor.getEditedImage());
     }
 
-
-
+    @Override
+    public void changeSaturation(int position) {
+        float sat = (float) 1 / position;
+        Log.d(TAG, "POsition sat is " + position);
+        mImageEditor.setSaturation(sat);
+    }
 
 }

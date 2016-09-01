@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 
 import com.babenko.movavitest.Interfaces.EditPictureInterface;
 import com.babenko.movavitest.MainActivity;
@@ -42,6 +43,24 @@ public class ImageEditorFragment extends Fragment {
         final Button effectButt = (Button) getView().findViewById(R.id.buttonEffects);
         final Button afterButt = (Button) getView().findViewById(R.id.buttonAfter);
         final ArrayList<Button> buttonsList = new ArrayList<Button>();
+        SeekBar saturationSeek = (SeekBar) getView().findViewById(R.id.saturationSeekBar);
+        saturationSeek.setMax(9);
+        saturationSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mInterface.changeSaturation(progress + 1);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         buttonsList.add(beforeButt);
         buttonsList.add(effectButt);
         buttonsList.add(afterButt);

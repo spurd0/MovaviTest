@@ -7,4 +7,5 @@ public interface EditPictureInterface {
     void beforeButtonPressed();
     void effectButtonPressed();
     void afterButtonPressed();
+    void changeSaturation(int position);
 }

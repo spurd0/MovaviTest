@@ -8,7 +8,11 @@ import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.util.Log;
 
+import com.babenko.movavitest.Data.EditorState;
+import com.babenko.movavitest.Data.EditorState.editorState;
+import com.babenko.movavitest.Interfaces.EditPictureInterface;
 import com.babenko.movavitest.R;
 
 /**
@@ -31,9 +35,12 @@ public class ImageEditor {
     int imageWidth;
     int imageHeight;
 
-    public ImageEditor(Activity mActivity, String mImagePath) {
+    EditPictureInterface mInterface;
+
+    public ImageEditor(Activity mActivity, String mImagePath, EditPictureInterface mInterface) {
         this.mActivity = mActivity;
         this.mImagePath = mImagePath;
+        this.mInterface = mInterface;
         prepareEditor();
     }
 
@@ -75,23 +82,40 @@ public class ImageEditor {
     }
 
     public Bitmap getEditPreviewImage() {
+        EditorState.setState(editorState.preview);
         editCanvas.drawBitmap(originalImagePartBm, 0, 0, linePaint);
         editCanvas.drawLine(editedBitmap.getWidth()/2, editedBitmap.getHeight(), editedBitmap.getWidth()/2, 0, linePaint);
-
-        ColorMatrix cm = new ColorMatrix();
-        cm.setSaturation(0);
-        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
-        effectPaint.setColorFilter(f);
         editCanvas.drawBitmap(editedImagePartBm, imageWidth/2, 0, effectPaint);
         return editedBitmap;
     }
 
     public Bitmap getEditedImage() {
+        EditorState.setState(editorState.after);
         editCanvas.drawBitmap(origImageBitmap, 0, 0, effectPaint);
         return editedBitmap;
     }
 
     public Bitmap getOriginalImage() {
+        EditorState.setState(editorState.before);
         return origImageBitmap;
+    }
+
+    public void setSaturation(float saturation) {
+        Log.d("TAG", "saturation is " + saturation);
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(saturation);
+        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+        effectPaint.setColorFilter(f);
+
+        switch (EditorState.getState()) {
+            case preview: {
+                mInterface.effectButtonPressed();
+                break;
+            }
+            case after: {
+                mInterface.afterButtonPressed();
+                break;
+            }
+        }
     }
 }
