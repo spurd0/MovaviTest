@@ -1,8 +1,8 @@
 package com.babenko.movavitest.Fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,7 +13,6 @@ import android.widget.Button;
 import com.babenko.movavitest.Data.Codes;
 import com.babenko.movavitest.Helpers.UtilsHelper;
 import com.babenko.movavitest.Interfaces.SelectPictureInterface;
-import com.babenko.movavitest.MainActivity;
 import com.babenko.movavitest.R;
 
 /**
@@ -21,6 +20,9 @@ import com.babenko.movavitest.R;
  */
 public class SelectPictureFragment extends Fragment {
     SelectPictureInterface mInterface;
+
+    public static final String ACTION_IMAGE_SELECTOR_FRAGMENT = "com.babenko.movavitest.RESPONSE_SELECT_PICTURE";
+    public static final String IMAGE_SELECTOR_FRAGMENT_ID = "IMAGE_SELECTOR_FRAGMENT_ID";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,9 +33,18 @@ public class SelectPictureFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        sendIdToActivity();
         initButton();
-        ((MainActivity) getActivity()).onSelectPictureFragmentCreated(this); // todo remake to event
     }
+
+    private void sendIdToActivity() {
+        Intent responseIntent = new Intent();
+        responseIntent.setAction(ACTION_IMAGE_SELECTOR_FRAGMENT);
+        responseIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        responseIntent.putExtra(IMAGE_SELECTOR_FRAGMENT_ID, this.getId());
+        getActivity().sendBroadcast(responseIntent);
+    }
+
 
     private void initButton() {
         Button startButton = (Button) getView().findViewById(R.id.startButton);

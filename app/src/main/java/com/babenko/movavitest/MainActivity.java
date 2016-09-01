@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
     SelectPictureFragment mSelectFragment;
     ImageEditorFragment mImageEditorFragment;
     String imagePath;
+    String IMAGE_PATH_KEY = "imagePath";
     ImageEditor mImageEditor;
     private MyBroadcastReceiver mMyBroadcastReceiver;
 
@@ -36,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) { // TODO: 8/31/2016  remade when start fragment
             showSelectPictureFragment();
+        } else {
+            imagePath = savedInstanceState.getString(IMAGE_PATH_KEY);
+            mImageEditor = new ImageEditor(this, imagePath, this);
         }
         registerReceiver();
     }
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
         mMyBroadcastReceiver = new MyBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter(
                 ImageEditorFragment.ACTION_IMAGE_EDITOR_FRAGMENT);
+        intentFilter.addAction(SelectPictureFragment.ACTION_IMAGE_SELECTOR_FRAGMENT);
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(mMyBroadcastReceiver, intentFilter);
     }
@@ -86,10 +91,6 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
         }
     }
 
-    public void onSelectPictureFragmentCreated(SelectPictureFragment selectFragment) {
-        this.mSelectFragment = selectFragment;
-        setSelectPictureInterface();
-    }
 
     private void setSelectPictureInterface() {
         mSelectFragment.setmInterface(this);
@@ -106,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
 
     private void showImageEditorFragment() {
         mImageEditorFragment = new ImageEditorFragment();
-        mImageEditorFragment.setmInterface(this);
 
         getFragmentManager().beginTransaction()
                 .addToBackStack("Selector")
@@ -114,13 +114,9 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
                 .commit();
     }
 
-    public void onImageEditorFragmentCreated(ImageEditorFragment imageEditorFragment) {
-        this.mImageEditorFragment = imageEditorFragment;
-
-    }
-
     private void setImageEditorInterface() {
-        mImageEditorFragment.setmInterface(this);
+        Log.d(TAG, "setImageEditorInterface");
+        mImageEditorFragment.setInterface(this);
     }
 
 
@@ -149,10 +145,34 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int id = intent.getIntExtra(ImageEditorFragment.IMAGE_EDITOR_FRAGMENT_ID, -1);
-            mImageEditorFragment = (ImageEditorFragment) getFragmentManager().findFragmentById(id);
-            if (mImageEditorFragment !=null) setImageEditorInterface();
+            Log.d(TAG, intent.getAction());
+            switch (intent.getAction()) {
+                case (ImageEditorFragment.ACTION_IMAGE_EDITOR_FRAGMENT): {
+                    int id = intent.getIntExtra(ImageEditorFragment.IMAGE_EDITOR_FRAGMENT_ID, -1);
+                    mImageEditorFragment = (ImageEditorFragment) getFragmentManager().findFragmentById(id);
+                    if (mImageEditorFragment != null) setImageEditorInterface();
+                    break;
+                }
+                case (SelectPictureFragment.ACTION_IMAGE_SELECTOR_FRAGMENT): {
+                    int id = intent.getIntExtra(SelectPictureFragment.IMAGE_SELECTOR_FRAGMENT_ID, -1);
+                    mSelectFragment = (SelectPictureFragment) getFragmentManager().findFragmentById(id);
+                    if (mSelectFragment != null) setSelectPictureInterface();
+                    break;
+                }
+            }
+
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mMyBroadcastReceiver);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(IMAGE_PATH_KEY, imagePath);
+    }
 }

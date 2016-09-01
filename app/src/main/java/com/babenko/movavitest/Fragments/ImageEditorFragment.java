@@ -24,13 +24,13 @@ public class ImageEditorFragment extends Fragment {
     EditPictureInterface mInterface;
     ImageView mImage;
 
-    public static final String ACTION_IMAGE_EDITOR_FRAGMENT = "com.babenko.movavitest.RESPONSE";
-    public static final String IMAGE_EDITOR_FRAGMENT_ID = "IMAGE_EDITOR_FRAGMENT_ID";
+    public static final String ACTION_IMAGE_EDITOR_FRAGMENT
+            = "com.babenko.movavitest.RESPONSE_IMAGE_EDITOR";
+    public static final String IMAGE_EDITOR_FRAGMENT_ID = "IMAGE_SELECTOR_FRAGMENT_ID";
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initViews();
         sendIdToActivity();
     }
 
@@ -81,6 +81,7 @@ public class ImageEditorFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 setViewsEnabeled(effectButt, buttonsList, saturationSeek, true);
+                Log.d("TAG", "setOnClickListener " + (mInterface == null));
                 mInterface.effectButtonPressed();
             }
         });
@@ -103,8 +104,10 @@ public class ImageEditorFragment extends Fragment {
         effectButt.performClick(); // // TODO: 9/1/2016 temp solution, rework
     }
 
-    public void setmInterface(EditPictureInterface mInterface) {
+    public void setInterface(EditPictureInterface mInterface) {
         this.mInterface = mInterface;
+        initViews();
+        Log.d("TAG", "setInterface " + (this.mInterface == null));
     }
 
     public void setImage(Bitmap mBitmap) {
@@ -123,9 +126,5 @@ public class ImageEditorFragment extends Fragment {
         if (sbEnabeled) {
             seekBar.setVisibility(View.VISIBLE);
         } else seekBar.setVisibility(View.INVISIBLE);
-    }
-
-    public void foo(){
-        Log.d("Tag", "foo");
     }
 }
