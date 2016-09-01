@@ -1,6 +1,9 @@
 package com.babenko.movavitest;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
     ImageEditorFragment mImageEditorFragment;
     String imagePath;
     ImageEditor mImageEditor;
+    private MyBroadcastReceiver mMyBroadcastReceiver;
 
 
     @Override
@@ -33,6 +37,15 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
         if (savedInstanceState == null) { // TODO: 8/31/2016  remade when start fragment
             showSelectPictureFragment();
         }
+        registerReceiver();
+    }
+
+    private void registerReceiver(){
+        mMyBroadcastReceiver = new MyBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter(
+                ImageEditorFragment.ACTION_IMAGE_EDITOR_FRAGMENT);
+        intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(mMyBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -103,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
 
     public void onImageEditorFragmentCreated(ImageEditorFragment imageEditorFragment) {
         this.mImageEditorFragment = imageEditorFragment;
-        setImageEditorInterface();
+
     }
 
     private void setImageEditorInterface() {
@@ -131,6 +144,15 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
     public void changeSaturation(int position) {
         float sat = (float) 1 / position;
         mImageEditor.setSaturation(sat);
+    }
+
+    public class MyBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int id = intent.getIntExtra(ImageEditorFragment.IMAGE_EDITOR_FRAGMENT_ID, -1);
+            mImageEditorFragment = (ImageEditorFragment) getFragmentManager().findFragmentById(id);
+            if (mImageEditorFragment !=null) setImageEditorInterface();
+        }
     }
 
 }

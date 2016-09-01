@@ -1,8 +1,10 @@
 package com.babenko.movavitest.Fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import com.babenko.movavitest.Interfaces.EditPictureInterface;
-import com.babenko.movavitest.MainActivity;
 import com.babenko.movavitest.R;
 
 import java.util.ArrayList;
@@ -23,13 +24,24 @@ public class ImageEditorFragment extends Fragment {
     EditPictureInterface mInterface;
     ImageView mImage;
 
+    public static final String ACTION_IMAGE_EDITOR_FRAGMENT = "com.babenko.movavitest.RESPONSE";
+    public static final String IMAGE_EDITOR_FRAGMENT_ID = "IMAGE_EDITOR_FRAGMENT_ID";
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initViews();
-        ((MainActivity) getActivity()).onImageEditorFragmentCreated(this); // todo remake to event
+        sendIdToActivity();
     }
+
+    private void sendIdToActivity() {
+        Intent responseIntent = new Intent();
+        responseIntent.setAction(ACTION_IMAGE_EDITOR_FRAGMENT);
+        responseIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        responseIntent.putExtra(IMAGE_EDITOR_FRAGMENT_ID, this.getId());
+        getActivity().sendBroadcast(responseIntent);
+    }
+
 
 
     @Override
@@ -111,5 +123,9 @@ public class ImageEditorFragment extends Fragment {
         if (sbEnabeled) {
             seekBar.setVisibility(View.VISIBLE);
         } else seekBar.setVisibility(View.INVISIBLE);
+    }
+
+    public void foo(){
+        Log.d("Tag", "foo");
     }
 }
