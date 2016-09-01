@@ -1,7 +1,7 @@
 package com.babenko.movavitest.Data;
 
 /**
- * Created by Roman Babenko (roman.babenko@sibers.com) on 9/1/2016.
+ * Created by Roman Babenko (rbab@yandex.ru) on 9/1/2016.
  */
 public class EditorState {
     public static enum editorState {before, preview, after}

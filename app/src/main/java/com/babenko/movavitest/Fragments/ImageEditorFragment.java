@@ -17,7 +17,7 @@ import com.babenko.movavitest.R;
 import java.util.ArrayList;
 
 /**
- * Created by Roman Babenko (roman.babenko@sibers.com) on 8/31/2016.
+ * Created by Roman Babenko (rbab@yandex.ru) on 8/31/2016.
  */
 public class ImageEditorFragment extends Fragment {
     EditPictureInterface mInterface;
@@ -43,7 +43,7 @@ public class ImageEditorFragment extends Fragment {
         final Button effectButt = (Button) getView().findViewById(R.id.buttonEffects);
         final Button afterButt = (Button) getView().findViewById(R.id.buttonAfter);
         final ArrayList<Button> buttonsList = new ArrayList<Button>();
-        SeekBar saturationSeek = (SeekBar) getView().findViewById(R.id.saturationSeekBar);
+        final SeekBar saturationSeek = (SeekBar) getView().findViewById(R.id.saturationSeekBar);
         saturationSeek.setMax(9);
         saturationSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -68,7 +68,7 @@ public class ImageEditorFragment extends Fragment {
         effectButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setButtonsPressed(effectButt, buttonsList);
+                setViewsEnabeled(effectButt, buttonsList, saturationSeek, true);
                 mInterface.effectButtonPressed();
             }
         });
@@ -76,7 +76,7 @@ public class ImageEditorFragment extends Fragment {
         beforeButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setButtonsPressed(beforeButt, buttonsList);
+                setViewsEnabeled(beforeButt, buttonsList, saturationSeek, false);
                 mInterface.beforeButtonPressed();
             }
         });
@@ -84,10 +84,11 @@ public class ImageEditorFragment extends Fragment {
         afterButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setButtonsPressed(afterButt, buttonsList);
+                setViewsEnabeled(afterButt, buttonsList, saturationSeek, true);
                 mInterface.afterButtonPressed();
             }
         });
+        effectButt.performClick(); // // TODO: 9/1/2016 temp solution, rework
     }
 
     public void setmInterface(EditPictureInterface mInterface) {
@@ -98,7 +99,8 @@ public class ImageEditorFragment extends Fragment {
         mImage.setImageBitmap(mBitmap);
     }
 
-    private void setButtonsPressed(Button button, ArrayList<Button> list) {
+    private void setViewsEnabeled(Button button, ArrayList<Button> list, SeekBar seekBar,
+                                  boolean sbEnabeled) {
         for (Button but : list) {
             if (but == button) {
                 but.setBackgroundResource(R.drawable.button_state_pressed);
@@ -106,5 +108,8 @@ public class ImageEditorFragment extends Fragment {
                 but.setBackgroundResource(android.R.drawable.btn_default);
             }
         }
+        if (sbEnabeled) {
+            seekBar.setVisibility(View.VISIBLE);
+        } else seekBar.setVisibility(View.INVISIBLE);
     }
 }

@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.babenko.movavitest.Data.Codes;
 
 /**
- * Created by Roman Babenko (roman.babenko@sibers.com) on 8/30/2016.
+ * Created by Roman Babenko (rbab@yandex.ru) on 8/30/2016.
  */
 public class UtilsHelper {
     static String TAG = "UtilsHelper";

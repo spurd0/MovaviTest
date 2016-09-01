@@ -16,7 +16,7 @@ import com.babenko.movavitest.Interfaces.EditPictureInterface;
 import com.babenko.movavitest.R;
 
 /**
- * Created by Roman Babenko (roman.babenko@sibers.com) on 9/1/2016.
+ * Created by Roman Babenko (rbab@yandex.ru) on 9/1/2016.
  */
 public class ImageEditor {
     Bitmap editedBitmap;
@@ -101,7 +101,6 @@ public class ImageEditor {
     }
 
     public void setSaturation(float saturation) {
-        Log.d("TAG", "saturation is " + saturation);
         ColorMatrix cm = new ColorMatrix();
         cm.setSaturation(saturation);
         ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
