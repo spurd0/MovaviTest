@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.net.Uri;
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
     SelectPictureFragment mSelectFragment;
     ImageEditorFragment mImageEditorFragment;
     String imagePath;
-    Bitmap alteredBitmap;
+    Bitmap editedBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,15 +158,28 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
 
     private Bitmap loadEffectImage(String mImagePath) {
         Bitmap image = loadResizedImage(mImagePath);
-        alteredBitmap = Bitmap.createBitmap(image.getWidth(), image
-                .getHeight(), image.getConfig());
-        Canvas editCanvas = new Canvas(alteredBitmap);
+        int imageWidth = image.getWidth();
+        int imageHeight = image.getHeight();
+        editedBitmap = Bitmap.createBitmap(imageWidth, imageHeight, image.getConfig());
+        Bitmap originalImagePartBm = Bitmap.createBitmap(image, 0, 0, imageWidth/2, imageHeight);
+        Bitmap editedImagePartBm = Bitmap.createBitmap(image, imageWidth/2, 0, imageWidth/2, imageHeight);
+        Canvas editCanvas = new Canvas(editedBitmap);
+
         Paint paint = new Paint();
         paint.setColor(Color.GREEN);
         paint.setStrokeWidth(5);
-        Matrix matrix = new Matrix();
-        editCanvas.drawBitmap(image, matrix, paint);
-        editCanvas.drawLine(alteredBitmap.getWidth()/2, alteredBitmap.getHeight(), alteredBitmap.getWidth()/2, 0, paint);
-        return alteredBitmap;
+
+        editCanvas.drawBitmap(originalImagePartBm, 0, 0, paint);
+        editCanvas.drawLine(editedBitmap.getWidth()/2, editedBitmap.getHeight(), editedBitmap.getWidth()/2, 0, paint);
+
+
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+        paint.setColorFilter(f);
+        editCanvas.drawBitmap(editedImagePartBm, imageWidth/2, 0, paint);
+        return editedBitmap;
     }
+
+
 }
