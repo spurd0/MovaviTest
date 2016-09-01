@@ -69,8 +69,8 @@ public class ImageEditor {
 
     public Bitmap getEditPreviewImage() {
         Paint paint = new Paint();
-        paint.setColor(Color.GREEN);
-        paint.setStrokeWidth(5);
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(10);
 
         editCanvas.drawBitmap(originalImagePartBm, 0, 0, paint);
         editCanvas.drawLine(editedBitmap.getWidth()/2, editedBitmap.getHeight(), editedBitmap.getWidth()/2, 0, paint);
@@ -84,6 +84,12 @@ public class ImageEditor {
     }
 
     public Bitmap getEditedImage() {
+        Paint paint = new Paint();
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+        paint.setColorFilter(f);
+        editCanvas.drawBitmap(origImageBitmap, 0, 0, paint);
         return editedBitmap;
     }
 
