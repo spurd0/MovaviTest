@@ -2,6 +2,7 @@ package com.babenko.movavitest;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -17,6 +18,8 @@ import com.babenko.movavitest.fragments.SelectPictureFragment;
 import com.babenko.movavitest.helpers.UtilsHelper;
 import com.babenko.movavitest.interfaces.EditPictureInterface;
 import com.babenko.movavitest.interfaces.SelectPictureInterface;
+
+import java.util.NoSuchElementException;
 
 public class MainActivity extends AppCompatActivity implements SelectPictureInterface, EditPictureInterface {
     private static final String TAG = "MainActivity";
@@ -35,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
             showSelectPictureFragment();
         } else {
             mImagePath = savedInstanceState.getString(IMAGE_PATH_KEY);
-            mImageEditor = new ImageEditor(this, mImagePath, this);
+            if (mImagePath != null) mImageEditor = new ImageEditor(this, mImagePath, this);
         }
     }
 
@@ -114,6 +117,14 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
     public void changeSaturation(int position) {
         float sat = (float) 1 / position;
         mImageEditor.setSaturation(sat);
+    }
+
+    @Override
+    public void imageEditorInited(int id) {
+        if (getFragmentManager().findFragmentById(id) != null) {
+            mImageEditorFragment = (ImageEditorFragment) getFragmentManager().findFragmentById(id);
+        } else throw new NoSuchElementException("ImageEditorFragment couldn`t be founded");
+
     }
 
 

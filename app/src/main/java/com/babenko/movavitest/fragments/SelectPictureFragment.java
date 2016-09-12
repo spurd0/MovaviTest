@@ -1,7 +1,9 @@
 package com.babenko.movavitest.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -19,6 +21,23 @@ import com.babenko.movavitest.R;
  */
 public class SelectPictureFragment extends Fragment {
     private SelectPictureInterface mInterface;
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Activity a;
+
+        if (context instanceof Activity){
+            a = (Activity) context;
+            try {
+                mInterface = (SelectPictureInterface) a;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(a.toString()
+                        + " must implement OnHeadlineSelectedListener");
+            }
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

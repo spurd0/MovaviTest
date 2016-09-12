@@ -35,6 +35,7 @@ public class ImageEditorFragment extends Fragment {
             a = (Activity) context;
             try {
                 mInterface = (EditPictureInterface) a;
+                mInterface.imageEditorInited(this.getId());
             } catch (ClassCastException e) {
                 throw new ClassCastException(a.toString()
                         + " must implement OnHeadlineSelectedListener");

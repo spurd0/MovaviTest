@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.babenko.movavitest.data.EditorState;
 import com.babenko.movavitest.data.EditorState.editorState;
@@ -19,21 +18,20 @@ import com.babenko.movavitest.R;
  * Created by Roman Babenko (rbab@yandex.ru) on 9/1/2016.
  */
 public class ImageEditor {
-    Bitmap editedBitmap;
-    Bitmap origImageBitmap;
-    Bitmap originalImagePartBm;
-    Bitmap editedImagePartBm;
+    private Bitmap mEditedBitmap;
+    private Bitmap mOrigImageBitmap;
+    private Bitmap mOriginalImagePartBm;
+    private Bitmap mEditedImagePartBm;
 
-    Canvas editCanvas;
+    private Canvas mEditCanvas;
 
-    Paint effectPaint;
-    Paint linePaint;
+    private Paint mEffectPaint;
+    private Paint mLinePaint;
 
-    Activity mActivity;
-    String mImagePath;
+    private Activity mActivity;
+    private String mImagePath;
 
-    int imageWidth;
-    int imageHeight;
+    private int mImageWidth;
 
     EditPictureInterface mInterface;
 
@@ -45,17 +43,17 @@ public class ImageEditor {
     }
 
     private void prepareEditor() {
-        origImageBitmap = loadResizedImage();
-        imageWidth = origImageBitmap.getWidth();
-        imageHeight = origImageBitmap.getHeight();
-        editedBitmap = Bitmap.createBitmap(imageWidth, imageHeight, origImageBitmap.getConfig());
-        originalImagePartBm = Bitmap.createBitmap(origImageBitmap, 0, 0, imageWidth/2, imageHeight);
-        editedImagePartBm = Bitmap.createBitmap(origImageBitmap, imageWidth/2, 0, imageWidth/2, imageHeight);
-        editCanvas = new Canvas(editedBitmap);
-        effectPaint = new Paint();
-        linePaint = new Paint();
-        linePaint.setColor(Color.WHITE);
-        linePaint.setStrokeWidth(10);
+        mOrigImageBitmap = loadResizedImage();
+        mImageWidth = mOrigImageBitmap.getWidth();
+        int imageHeight = mOrigImageBitmap.getHeight();
+        mEditedBitmap = Bitmap.createBitmap(mImageWidth, imageHeight, mOrigImageBitmap.getConfig());
+        mOriginalImagePartBm = Bitmap.createBitmap(mOrigImageBitmap, 0, 0, mImageWidth /2, imageHeight);
+        mEditedImagePartBm = Bitmap.createBitmap(mOrigImageBitmap, mImageWidth /2, 0, mImageWidth /2, imageHeight);
+        mEditCanvas = new Canvas(mEditedBitmap);
+        mEffectPaint = new Paint();
+        mLinePaint = new Paint();
+        mLinePaint.setColor(Color.WHITE);
+        mLinePaint.setStrokeWidth(10);
     }
 
 
@@ -83,28 +81,28 @@ public class ImageEditor {
 
     public Bitmap getEditPreviewImage() {
         EditorState.setState(editorState.preview);
-        editCanvas.drawBitmap(originalImagePartBm, 0, 0, linePaint);
-        editCanvas.drawLine(editedBitmap.getWidth()/2, editedBitmap.getHeight(), editedBitmap.getWidth()/2, 0, linePaint);
-        editCanvas.drawBitmap(editedImagePartBm, imageWidth/2, 0, effectPaint);
-        return editedBitmap;
+        mEditCanvas.drawBitmap(mOriginalImagePartBm, 0, 0, mLinePaint);
+        mEditCanvas.drawLine(mEditedBitmap.getWidth()/2, mEditedBitmap.getHeight(), mEditedBitmap.getWidth()/2, 0, mLinePaint);
+        mEditCanvas.drawBitmap(mEditedImagePartBm, mImageWidth /2, 0, mEffectPaint);
+        return mEditedBitmap;
     }
 
     public Bitmap getEditedImage() {
         EditorState.setState(editorState.after);
-        editCanvas.drawBitmap(origImageBitmap, 0, 0, effectPaint);
-        return editedBitmap;
+        mEditCanvas.drawBitmap(mOrigImageBitmap, 0, 0, mEffectPaint);
+        return mEditedBitmap;
     }
 
     public Bitmap getOriginalImage() {
         EditorState.setState(editorState.before);
-        return origImageBitmap;
+        return mOrigImageBitmap;
     }
 
     public void setSaturation(float saturation) {
         ColorMatrix cm = new ColorMatrix();
         cm.setSaturation(saturation);
         ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
-        effectPaint.setColorFilter(f);
+        mEffectPaint.setColorFilter(f);
 
         switch (EditorState.getState()) {
             case preview: {
