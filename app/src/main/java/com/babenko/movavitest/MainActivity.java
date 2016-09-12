@@ -23,7 +23,6 @@ import java.util.NoSuchElementException;
 
 public class MainActivity extends AppCompatActivity implements SelectPictureInterface, EditPictureInterface {
     private static final String TAG = "MainActivity";
-    private SelectPictureFragment mSelectFragment;
     private ImageEditorFragment mImageEditorFragment;
     private String mImagePath;
     private static final String IMAGE_PATH_KEY = "imagePath";
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) { // TODO: 8/31/2016  remade when start fragment
+        if (savedInstanceState == null) {
             showSelectPictureFragment();
         } else {
             mImagePath = savedInstanceState.getString(IMAGE_PATH_KEY);
@@ -81,11 +80,11 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
     }
 
     private void showSelectPictureFragment() {
-        mSelectFragment = new SelectPictureFragment();
-        mSelectFragment.setmInterface(this);
+        SelectPictureFragment selectFragment = new SelectPictureFragment();
+        selectFragment.setmInterface(this);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.mainLayout, mSelectFragment)
+                .replace(R.id.mainLayout, selectFragment)
                 .commit();
     }
 

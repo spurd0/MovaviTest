@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import com.babenko.movavitest.data.EditorState;
 import com.babenko.movavitest.interfaces.EditPictureInterface;
 import com.babenko.movavitest.R;
 
@@ -107,7 +108,20 @@ public class ImageEditorFragment extends Fragment {
                 mInterface.afterButtonPressed();
             }
         });
-        effectButt.performClick(); // // TODO: 9/1/2016 temp solution, rework
+        switch (EditorState.getState()) {
+            case preview: {
+                effectButt.performClick();
+                break;
+            }
+            case after: {
+                afterButt.performClick();
+                break;
+            }
+            case before: {
+                beforeButt.performClick();
+                break;
+            }
+        }
     }
 
     public void setImage(Bitmap mBitmap) {
