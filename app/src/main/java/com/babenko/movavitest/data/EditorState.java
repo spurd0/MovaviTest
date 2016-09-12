@@ -1,4 +1,4 @@
-package com.babenko.movavitest.Data;
+package com.babenko.movavitest.data;
 
 /**
  * Created by Roman Babenko (rbab@yandex.ru) on 9/1/2016.

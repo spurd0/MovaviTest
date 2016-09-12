@@ -1,4 +1,4 @@
-package com.babenko.movavitest.Editors;
+package com.babenko.movavitest.editors;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -10,9 +10,9 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.util.Log;
 
-import com.babenko.movavitest.Data.EditorState;
-import com.babenko.movavitest.Data.EditorState.editorState;
-import com.babenko.movavitest.Interfaces.EditPictureInterface;
+import com.babenko.movavitest.data.EditorState;
+import com.babenko.movavitest.data.EditorState.editorState;
+import com.babenko.movavitest.interfaces.EditPictureInterface;
 import com.babenko.movavitest.R;
 
 /**

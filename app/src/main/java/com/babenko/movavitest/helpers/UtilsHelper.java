@@ -1,4 +1,4 @@
-package com.babenko.movavitest.Helpers;
+package com.babenko.movavitest.helpers;
 
 import android.Manifest;
 import android.app.Activity;
@@ -9,7 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.babenko.movavitest.Data.Codes;
+import com.babenko.movavitest.data.Codes;
 
 /**
  * Created by Roman Babenko (rbab@yandex.ru) on 8/30/2016.

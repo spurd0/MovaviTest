@@ -1,4 +1,4 @@
-package com.babenko.movavitest.Fragments;
+package com.babenko.movavitest.fragments;
 
 import android.Manifest;
 import android.app.Fragment;
@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.babenko.movavitest.Data.Codes;
-import com.babenko.movavitest.Helpers.UtilsHelper;
-import com.babenko.movavitest.Interfaces.SelectPictureInterface;
+import com.babenko.movavitest.data.Codes;
+import com.babenko.movavitest.helpers.UtilsHelper;
+import com.babenko.movavitest.interfaces.SelectPictureInterface;
 import com.babenko.movavitest.R;
 
 /**

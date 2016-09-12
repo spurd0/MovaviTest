@@ -13,13 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.babenko.movavitest.Data.Codes;
-import com.babenko.movavitest.Editors.ImageEditor;
-import com.babenko.movavitest.Fragments.ImageEditorFragment;
-import com.babenko.movavitest.Fragments.SelectPictureFragment;
-import com.babenko.movavitest.Helpers.UtilsHelper;
-import com.babenko.movavitest.Interfaces.EditPictureInterface;
-import com.babenko.movavitest.Interfaces.SelectPictureInterface;
+import com.babenko.movavitest.data.Codes;
+import com.babenko.movavitest.editors.ImageEditor;
+import com.babenko.movavitest.fragments.ImageEditorFragment;
+import com.babenko.movavitest.fragments.SelectPictureFragment;
+import com.babenko.movavitest.helpers.UtilsHelper;
+import com.babenko.movavitest.interfaces.EditPictureInterface;
+import com.babenko.movavitest.interfaces.SelectPictureInterface;
 
 public class MainActivity extends AppCompatActivity implements SelectPictureInterface, EditPictureInterface {
     String TAG = "MainActivity";

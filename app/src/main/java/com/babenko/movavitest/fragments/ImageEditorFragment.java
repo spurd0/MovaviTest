@@ -1,4 +1,4 @@
-package com.babenko.movavitest.Fragments;
+package com.babenko.movavitest.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
-import com.babenko.movavitest.Interfaces.EditPictureInterface;
+import com.babenko.movavitest.interfaces.EditPictureInterface;
 import com.babenko.movavitest.R;
 
 import java.util.ArrayList;
