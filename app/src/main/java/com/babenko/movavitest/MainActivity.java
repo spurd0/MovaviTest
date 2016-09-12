@@ -1,9 +1,6 @@
 package com.babenko.movavitest;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -22,13 +19,12 @@ import com.babenko.movavitest.interfaces.EditPictureInterface;
 import com.babenko.movavitest.interfaces.SelectPictureInterface;
 
 public class MainActivity extends AppCompatActivity implements SelectPictureInterface, EditPictureInterface {
-    String TAG = "MainActivity";
-    SelectPictureFragment mSelectFragment;
-    ImageEditorFragment mImageEditorFragment;
-    String imagePath;
-    String IMAGE_PATH_KEY = "imagePath";
-    ImageEditor mImageEditor;
-    private MyBroadcastReceiver mMyBroadcastReceiver;
+    private static final String TAG = "MainActivity";
+    private SelectPictureFragment mSelectFragment;
+    private ImageEditorFragment mImageEditorFragment;
+    private String mImagePath;
+    private static final String IMAGE_PATH_KEY = "imagePath";
+    private ImageEditor mImageEditor;
 
 
     @Override
@@ -38,19 +34,9 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
         if (savedInstanceState == null) { // TODO: 8/31/2016  remade when start fragment
             showSelectPictureFragment();
         } else {
-            imagePath = savedInstanceState.getString(IMAGE_PATH_KEY);
-            mImageEditor = new ImageEditor(this, imagePath, this);
+            mImagePath = savedInstanceState.getString(IMAGE_PATH_KEY);
+            mImageEditor = new ImageEditor(this, mImagePath, this);
         }
-        registerReceiver();
-    }
-
-    private void registerReceiver(){
-        mMyBroadcastReceiver = new MyBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter(
-                ImageEditorFragment.ACTION_IMAGE_EDITOR_FRAGMENT);
-        intentFilter.addAction(SelectPictureFragment.ACTION_IMAGE_SELECTOR_FRAGMENT);
-        intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
-        registerReceiver(mMyBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -59,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
             case 1: { /// READ_EXTERNAL_STORAGE_CODE
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    openGalery();
+                    openGallery();
                 } else {
                     UtilsHelper.makeToast(this, getResources().getString(R.string.no_permission_read_storage));
                 }
@@ -68,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
     }
 
     @Override
-    public void openGalery() {
+    public void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, Codes.PHOTO_GALLERY);
     }
@@ -82,18 +68,13 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
                 Cursor cursor = getContentResolver().query(uri, fileColumn, null, null, null);
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(fileColumn[0]);
-                imagePath = cursor.getString(columnIndex);
+                mImagePath = cursor.getString(columnIndex);
                 cursor.close();
-                Log.d(TAG, imagePath);
-                mImageEditor = new ImageEditor(this, imagePath, this);
+                Log.d(TAG, mImagePath);
+                mImageEditor = new ImageEditor(this, mImagePath, this);
                 showImageEditorFragment();
             }
         }
-    }
-
-
-    private void setSelectPictureInterface() {
-        mSelectFragment.setmInterface(this);
     }
 
     private void showSelectPictureFragment() {
@@ -113,13 +94,6 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
                 .replace(R.id.mainLayout, mImageEditorFragment)
                 .commit();
     }
-
-    private void setImageEditorInterface() {
-        Log.d(TAG, "setImageEditorInterface");
-        mImageEditorFragment.setInterface(this);
-    }
-
-
 
     @Override
     public void beforeButtonPressed() {
@@ -142,37 +116,15 @@ public class MainActivity extends AppCompatActivity implements SelectPictureInte
         mImageEditor.setSaturation(sat);
     }
 
-    public class MyBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, intent.getAction());
-            switch (intent.getAction()) {
-                case (ImageEditorFragment.ACTION_IMAGE_EDITOR_FRAGMENT): {
-                    int id = intent.getIntExtra(ImageEditorFragment.IMAGE_EDITOR_FRAGMENT_ID, -1);
-                    mImageEditorFragment = (ImageEditorFragment) getFragmentManager().findFragmentById(id);
-                    if (mImageEditorFragment != null) setImageEditorInterface();
-                    break;
-                }
-                case (SelectPictureFragment.ACTION_IMAGE_SELECTOR_FRAGMENT): {
-                    int id = intent.getIntExtra(SelectPictureFragment.IMAGE_SELECTOR_FRAGMENT_ID, -1);
-                    mSelectFragment = (SelectPictureFragment) getFragmentManager().findFragmentById(id);
-                    if (mSelectFragment != null) setSelectPictureInterface();
-                    break;
-                }
-            }
-
-        }
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mMyBroadcastReceiver);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(IMAGE_PATH_KEY, imagePath);
+        outState.putString(IMAGE_PATH_KEY, mImagePath);
     }
 }

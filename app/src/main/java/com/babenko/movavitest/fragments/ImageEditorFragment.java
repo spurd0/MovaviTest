@@ -1,6 +1,8 @@
 package com.babenko.movavitest.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -21,27 +23,30 @@ import java.util.ArrayList;
  * Created by Roman Babenko (rbab@yandex.ru) on 8/31/2016.
  */
 public class ImageEditorFragment extends Fragment {
-    EditPictureInterface mInterface;
-    ImageView mImage;
+    private EditPictureInterface mInterface;
+    private ImageView mImage;
 
-    public static final String ACTION_IMAGE_EDITOR_FRAGMENT
-            = "com.babenko.movavitest.RESPONSE_IMAGE_EDITOR";
-    public static final String IMAGE_EDITOR_FRAGMENT_ID = "IMAGE_SELECTOR_FRAGMENT_ID";
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Activity a;
+
+        if (context instanceof Activity){
+            a = (Activity) context;
+            try {
+                mInterface = (EditPictureInterface) a;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(a.toString()
+                        + " must implement OnHeadlineSelectedListener");
+            }
+        }
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        sendIdToActivity();
+        initViews();
     }
-
-    private void sendIdToActivity() {
-        Intent responseIntent = new Intent();
-        responseIntent.setAction(ACTION_IMAGE_EDITOR_FRAGMENT);
-        responseIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        responseIntent.putExtra(IMAGE_EDITOR_FRAGMENT_ID, this.getId());
-        getActivity().sendBroadcast(responseIntent);
-    }
-
 
 
     @Override
@@ -102,12 +107,6 @@ public class ImageEditorFragment extends Fragment {
             }
         });
         effectButt.performClick(); // // TODO: 9/1/2016 temp solution, rework
-    }
-
-    public void setInterface(EditPictureInterface mInterface) {
-        this.mInterface = mInterface;
-        initViews();
-        Log.d("TAG", "setInterface " + (this.mInterface == null));
     }
 
     public void setImage(Bitmap mBitmap) {
